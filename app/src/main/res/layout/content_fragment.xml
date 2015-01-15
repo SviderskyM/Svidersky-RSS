@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollInfo"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/titleTextView"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:theme="@style/CustomTextView"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/infoTextView"
+            android:linksClickable="true"
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/titleTextView"
+            android:autoLink="web"
+            android:textSize="15sp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Save"
+            android:id="@+id/button"
+            android:layout_alignRight="@+id/infoTextView"
+            />
+    </RelativeLayout>
+
+
+</ScrollView>
