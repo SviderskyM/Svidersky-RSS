@@ -2,14 +2,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_refresh"
-        android:orderInCategory="100"
+        android:id="@+id/favourite"
         app:showAsAction="always"
-        android:icon="@drawable/abc_ic_menu_copy_mtrl_am_alpha"
-        android:title="Refresh"/>
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/favourites">
+    </item>
     <item
-        android:id="@+id/action_settings"
-        android:title="Settings">
+        android:id="@+id/share"
+        app:showAsAction="always"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:title="share">
+    </item>
+
+
+    <item
+        android:id="@+id/profile"
+        app:showAsAction="never"
+        android:title="@string/profile">
     </item>
 
 </menu>

@@ -3,6 +3,9 @@
     package="com.svidersky_rss" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.ListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,16 +21,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ContentActivity"/>
 
-        <service android:name=".service.NotificationService"/>
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:label="@string/app_name">
+        </activity>
+
+        <activity
+            android:name=".activity.ContentActivity"
+            android:label="@string/app_name"/>
+
+        <activity
+            android:name=".activity.Favorite"
+            android:label="@string/app_name"/>
+
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <meta-data android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <service android:name=".service.NotificationService"/>
+
     </application>
 
 </manifest>

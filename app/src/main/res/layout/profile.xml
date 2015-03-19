@@ -1,0 +1,72 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <fragment class="com.svidersky_rss.fragments.LoginFragment"
+        android:id="@+id/facebookFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#000000" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/google_plus"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/google_account"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="@dimen/titleTextView_padding"
+            android:textAllCaps="true"
+            />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/google_photo"
+            android:layout_gravity="center"
+            android:layout_below="@+id/google_plus"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/photo_profile" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/google_name"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:padding="@dimen/titleTextView_padding"
+            android:gravity="center"
+            android:text="@string/google_login"
+            android:layout_below="@+id/google_photo"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/google_name"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+

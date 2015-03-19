@@ -26,9 +26,12 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
-    private static final String CREATE_TABLE = "create table " + TABLE_NAME + " ( " + COLUMNS.ID
-            + " integer primary key autoincrement, " + COLUMNS.TITLE + " TEXT, " + COLUMNS.PICTURE
-            + " TEXT, " + COLUMNS.VIDEO + " TEXT, " + COLUMNS.UPLOADED + " TEXT, "
+    private static final String CREATE_TABLE = "create table " + TABLE_NAME + " ( "
+            + COLUMNS.ID + " integer primary key autoincrement, "
+            + COLUMNS.TITLE + " TEXT, "
+            + COLUMNS.PICTURE+ " TEXT, "
+            + COLUMNS.VIDEO + " TEXT, "
+            + COLUMNS.UPLOADED + " TEXT, "
             + COLUMNS.DESCRIPTION + " TEXT)";
 
     public DB(Context context) {
@@ -64,11 +67,11 @@ public class DB extends SQLiteOpenHelper {
 
     public ArrayList<Structure> getNews() {
         ArrayList<Structure> arrayList = new ArrayList<>();
-        Structure structure = null;
+        Structure structure ;
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMNS.ID, COLUMNS.TITLE, COLUMNS.PICTURE,
                         COLUMNS.VIDEO, COLUMNS.UPLOADED, COLUMNS.DESCRIPTION}, null, null, null, null,
-                COLUMNS.ID + " ASC");
+                null);
         if (cursor.moveToFirst()) {
             do {
                 structure = new Structure(cursor.getString(1), cursor.getString(2), cursor.getString(3),
@@ -78,7 +81,6 @@ public class DB extends SQLiteOpenHelper {
             cursor.close();
         }
         db.close();
-
         return arrayList;
     }
 

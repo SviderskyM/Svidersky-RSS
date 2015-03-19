@@ -1,14 +1,23 @@
 package com.svidersky_rss.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.svidersky_rss.service.NotificationService;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.svidersky_rss.Constants;
+import com.svidersky_rss.R;
+import com.svidersky_rss.utils.DB;
 import com.svidersky_rss.utils.ServiceHandler;
 import com.svidersky_rss.utils.Structure;
 import com.svidersky_rss.adapters.MyAdapter;
@@ -25,57 +34,138 @@ import java.util.ArrayList;
  */
 public class BaseFragment extends Fragment {
 
-    private static ArrayList<Structure> list = new ArrayList<>();
-    public static String url = "https://gdata.youtube.com/feeds/api/users/itsSokolOff/uploads?v=2&alt=jsonc&max-results=20";
+    private static ArrayList<Structure> listAll = new ArrayList<>();
+    public static ArrayList<Structure> listFavorite = new ArrayList<>();
     private static ListView listView;
 
-    public String getTitle(int id) {
-        return list.get(id).getTitle();
+    protected UiLifecycleHelper uiHelper;
+    private Session activeSession = Session.getActiveSession();
+    private static final String TAG = "Facebook";
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (activeSession != null &&
+                (activeSession.isOpened() || activeSession.isClosed()) ) {
+            onSessionStateChange(activeSession, activeSession.getState(), null);
+        }
+        uiHelper.onResume();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    public boolean isTable(){
+        return getResources().getBoolean(R.bool.isTable);
+    }
+
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i(TAG, "Logged in...");
+
+        } else if (state.isClosed()) {
+            Log.i(TAG, "Logged out...");
+        }
+    }
+
+
+    public String getTitle(int id) { return listAll.get(id).getTitle();}
+
     public String getDescription(int id) {
-        return list.get(id).getDescription();
+        return listAll.get(id).getDescription();
     }
 
     public String getPicture(int id) {
-        return list.get(id).getPicture();
+        return listAll.get(id).getPicture();
     }
 
     public String getUploaded(int id) {
-        return list.get(id).getUploaded();
+        return listAll.get(id).getUploaded();
     }
 
     public String getVideo(int id) {
-        return list.get(id).getVideo();
+        return listAll.get(id).getVideo();
+    }
+
+    public String getTitleF(int id) { return listFavorite.get(id).getTitle();}
+
+    public String getDescriptionF(int id) {
+        return listFavorite.get(id).getDescription();
+    }
+
+    public String getPictureF(int id) {
+        return listFavorite.get(id).getPicture();
+    }
+
+    public String getUploadedF(int id) {
+        return listFavorite.get(id).getUploaded();
+    }
+
+    public String getVideoF(int id) {
+        return listFavorite.get(id).getVideo();
     }
 
     public static class GetData extends AsyncTask<Void, Void, Void> {
 
         private Context context;
         public JSONArray video = null;
+        private static int count = 0;
+        private ProgressBar progressBar;
 
-        public GetData(Context context, ListView lw) {
+
+        public GetData(Context context, ListView lw, ProgressBar progressBar) {
             this.context = context;
             listView = lw;
-        }
-
-        public GetData(Context context) {
-            this.context = context;
+            this.progressBar = progressBar;
         }
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            // Creating service handler class instance
             ServiceHandler sh = new ServiceHandler();
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
-            Log.d("Response: ", "> " + jsonStr);
+            String jsonStr = sh.makeServiceCall(Constants.url, ServiceHandler.GET);
             if (jsonStr != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     JSONObject data = jsonObj.getJSONObject("data");
                     video = data.getJSONArray("items");
-                    list.clear();
+                    listAll.clear();
+                    count = 0;
                     for (int i = 0; i < video.length(); i++) {
                         JSONObject items = video.getJSONObject(i);
                         String title = items.getString("title");
@@ -86,7 +176,8 @@ public class BaseFragment extends Fragment {
                         String video = content.getString("mobile");
                         String picture = thumbnail.getString("sqDefault");
                         Structure structure = new Structure(title, picture, video, uploaded, description);
-                        list.add(structure);
+                        listAll.add(structure);
+                        count++;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -95,19 +186,21 @@ public class BaseFragment extends Fragment {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
                 Toast.makeText(context, "Немає інету, братіш провірь підключення!", Toast.LENGTH_LONG);
             }
-
             return null;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(true);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            MyAdapter adapter = new MyAdapter(context, list);
+            progressBar.setVisibility(View.GONE);
+            MyAdapter adapter = new MyAdapter(context, listAll);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
@@ -117,24 +210,41 @@ public class BaseFragment extends Fragment {
         }
 
         public String getLastNews() {
-            int last = list.size() - 1;
-            return list.get(last).getTitle();
+            int last = listAll.size() - 1;
+            return listAll.get(last).getTitle();
         }
     }
 
-    public static class ShowNews {
+    public static class GetData2 extends AsyncTask<DB, Void, Void> {
 
-        private ArrayList<Structure> arrayList;
         private Context context;
+        private ProgressBar progressBar;
 
-        public ShowNews(Context context, ArrayList<Structure> arrayList) {
+        public GetData2(Context context, ListView lw, ProgressBar progressBar) {
             this.context = context;
-            this.arrayList = arrayList;
-            saveNews(arrayList);
+            listView = lw;
+            this.progressBar = progressBar;
         }
 
-        public void saveNews(ArrayList<Structure> arrayList) {
-            MyAdapter adapter = new MyAdapter(context, arrayList);
+        @Override
+        protected Void doInBackground(DB... params) {
+            listFavorite.clear();
+            listFavorite = params[0].getNews();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(true);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
+            MyAdapter adapter = new MyAdapter(context, listFavorite);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }

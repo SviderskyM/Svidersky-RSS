@@ -9,9 +9,12 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.svidersky_rss.Constants;
 import com.svidersky_rss.R;
-import com.svidersky_rss.activity.MainActivity;
+import com.svidersky_rss.activity.ListActivity;
 import com.svidersky_rss.fragments.BaseFragment;
 
 import java.util.Timer;
@@ -23,6 +26,7 @@ import java.util.TimerTask;
 public class NotificationService extends Service {
 
     private NotificationManager notifyManager;
+    private ProgressBar progressBar;
     private static boolean first = true;
     private int count = 20;
     private Intent resultIntent;
@@ -32,6 +36,7 @@ public class NotificationService extends Service {
     private String lastVideo;
     private Context ctx;
     private int temp = 0;
+    private ListView listView;
 
 
     Timer timer;
@@ -61,7 +66,8 @@ public class NotificationService extends Service {
         tTask = new TimerTask() {
             @Override
             public void run() {
-                BaseFragment.GetData data = new BaseFragment.GetData(ctx);
+                BaseFragment.GetData data = new BaseFragment.GetData(getApplicationContext(),
+                        listView, progressBar);
                 data.execute();
                 temp = data.getCount();
                 if (temp != count) {
@@ -71,7 +77,7 @@ public class NotificationService extends Service {
                 }
             }
         };
-        timer.schedule(tTask, 20000, interval);
+        timer.schedule(tTask, 500000, interval);
     }
 
     @Override
@@ -82,7 +88,7 @@ public class NotificationService extends Service {
 
 
     public void showNotification() {
-        resultIntent = new Intent(this, MainActivity.class);
+        resultIntent = new Intent(this, ListActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
         res = this.getResources();
@@ -93,17 +99,17 @@ public class NotificationService extends Service {
                 .setTicker(res.getString(R.string.news))
                 .setWhen(System.currentTimeMillis())
                 .setNumber(++numMessage)
-                        //.setOngoing(true)
+                .setOngoing(true)
                 .setAutoCancel(true)
                 .setContentTitle(res.getString(R.string.app_name))
                 .setContentText(res.getString(R.string.start))
                 .setContentIntent(resultPendingIntent);
         notifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notifyManager.notify(99, builder.build());
+        notifyManager.notify(Constants.notification, builder.build());
     }
 
     private void updateNotification() {
-        resultIntent = new Intent(this, MainActivity.class);
+        resultIntent = new Intent(this, ListActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
         builder.setTicker(count + " " + res.getString(R.string.news))
@@ -113,7 +119,7 @@ public class NotificationService extends Service {
                 .setContentText(lastVideo)
                 .setContentIntent(resultPendingIntent);
         notifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notifyManager.notify(111, builder.build());
+        notifyManager.notify(Constants.notification, builder.build());
 
     }
 }

@@ -16,7 +16,8 @@ import com.svidersky_rss.fragments.ContentFragment;
 /**
  * Created by Eren on 17.12.2014.
  */
-public class ContentActivity extends ActionBarActivity {
+public class ContentActivity extends BaseActivity {
+    private ContentFragment contentFragment ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,25 +25,21 @@ public class ContentActivity extends ActionBarActivity {
         if (getResources().getBoolean(R.bool.isTable)) {
             finish();
             return;
-        } else {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.drawable.ic_launcher);
         }
+        else getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState == null) {
-            ContentFragment info = new ContentFragment();
-            info.setArguments(getIntent().getExtras());
-            getFragmentManager().beginTransaction().add(android.R.id.content,
-                    info).commit();
+            contentFragment = new ContentFragment();
+            contentFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, contentFragment)
+                    .commit();
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.two_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.favourite).setVisible(false);
+        menu.findItem(R.id.share).setVisible(true);
         return true;
     }
 
@@ -52,9 +49,10 @@ public class ContentActivity extends ActionBarActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.share:
+                return contentFragment.onOptionsItemSelected(item);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

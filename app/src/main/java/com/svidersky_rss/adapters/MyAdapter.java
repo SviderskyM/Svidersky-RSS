@@ -59,13 +59,20 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        View view = convertView;
-        if (view == null) {
-            view = lInflater.inflate(R.layout.item, parent, false);
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = lInflater.inflate(R.layout.item, parent, false);
+            holder = new ViewHolder();
+            holder.date = (TextView) convertView.findViewById(R.id.date);
+            holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
+            holder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) convertView.getTag();
         }
         Structure s = getStructure(position);
-        ((TextView) view.findViewById(R.id.tvDescription)).setText(s.getTitle());
+        holder.tvDescription.setText(s.getTitle());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = null;
         try {
@@ -73,16 +80,19 @@ public class MyAdapter extends BaseAdapter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        ((TextView) view.findViewById(R.id.date)).setText(date.toString());
+        holder.date.setText(date.toString());
         Picasso.with(ctx).load(s.getPicture())
                 .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.ic_launcher)
-                .into((ImageView) view.findViewById(R.id.ivImage));
+                .into(holder.ivImage);
 
-        return view;
+        return convertView;
     }
-
-
+    static class ViewHolder {
+        TextView tvDescription;
+        TextView date;
+        ImageView ivImage;
+    }
     Structure getStructure(int position) {
         return ((Structure) getItem(position));
     }

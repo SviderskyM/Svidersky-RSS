@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_below="@+id/profile_activity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/facebook_account"
+        android:layout_gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="@string/facebook_account"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="@dimen/titleTextView_padding"
+        android:textAllCaps="true"
+        />
+
+    <com.facebook.widget.ProfilePictureView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_photo"
+        android:layout_gravity="center"
+        android:layout_below="@+id/facebook_account"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_name"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="@string/facebook_login"
+        android:layout_below="@+id/user_photo"
+        android:layout_centerHorizontal="true"
+        />
+
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/user_name"
+        android:layout_centerHorizontal="true"
+        />
+</RelativeLayout>
