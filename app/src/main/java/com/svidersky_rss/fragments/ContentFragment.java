@@ -15,11 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.widget.FacebookDialog;
 import com.google.android.gms.plus.PlusShare;
+import com.squareup.picasso.Picasso;
 import com.svidersky_rss.Constants;
 import com.svidersky_rss.R;
 import com.svidersky_rss.utils.DB;
@@ -71,10 +73,16 @@ public class ContentFragment extends BaseFragment {
         final TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         final TextView infoTextView = (TextView) view.findViewById(R.id.infoTextView);
         final Button button = (Button) view.findViewById(R.id.button);
+        final ImageView imageView = (ImageView) view.findViewById(R.id.picture);
         if (Constants.flag) {
             titleTextView.setText(getTitleF(getIndex()));
+            Picasso.with(getActivity()).load(getPictureF(getIndex()))
+                    .resize(700,600)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(imageView);
             infoTextView.setText(Html.fromHtml(getDescriptionF(getIndex()) +
-                    "\n Cсылка на видео: " + getVideoF(getIndex()) + "\n\n"));
+                    "\nCсылка на видео: " + getVideoF(getIndex()) + "\n\n"));
             button.setText("Delete with favorite");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,8 +94,13 @@ public class ContentFragment extends BaseFragment {
             });
         } else {
             titleTextView.setText(getTitle(getIndex()));
+            Picasso.with(getActivity()).load(getPicture(getIndex()))
+                    .resize(700,600)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(imageView);
             infoTextView.setText(Html.fromHtml(getDescription(getIndex())) +
-                    "\n Cсылка на видео: " + getVideo(getIndex()) + "\n\n");
+                    "\nCсылка на видео: " + getVideo(getIndex()) + "\n\n");
             if (db.check(getTitle(getIndex())) < 0) {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override

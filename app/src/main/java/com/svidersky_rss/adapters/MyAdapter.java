@@ -65,7 +65,6 @@ public class MyAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
-            holder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
             convertView.setTag(holder);
         }
         else {
@@ -81,17 +80,16 @@ public class MyAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         holder.date.setText(date.toString());
-        Picasso.with(ctx).load(s.getPicture())
+        /*Picasso.with(ctx).load(s.getPicture())
                 .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.ic_launcher)
-                .into(holder.ivImage);
+                .into(holder.ivImage);*/
 
         return convertView;
     }
     static class ViewHolder {
         TextView tvDescription;
         TextView date;
-        ImageView ivImage;
     }
     Structure getStructure(int position) {
         return ((Structure) getItem(position));

@@ -17,6 +17,17 @@
             android:textStyle="bold"
             android:gravity="center"
             android:theme="@style/CustomTextView"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/picture"
+            android:layout_below="@+id/titleTextView"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:minHeight="35dp"
+            android:layout_centerHorizontal="true"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,8 +35,9 @@
             android:linksClickable="true"
             android:lineSpacingMultiplier="1.5"
             android:textColor="@android:color/black"
-            android:layout_below="@+id/titleTextView"
+            android:layout_below="@+id/picture"
             android:autoLink="web"
+            android:paddingLeft="10dp"
             android:textSize="15sp"/>
         <Button
             android:layout_width="wrap_content"

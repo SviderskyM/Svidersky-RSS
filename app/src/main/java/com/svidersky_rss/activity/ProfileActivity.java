@@ -55,6 +55,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.Con
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.favourite).setVisible(false);
         menu.findItem(R.id.profile).setVisible(false);
+        menu.findItem(R.id.share).setVisible(false);
         return true;
     }
 

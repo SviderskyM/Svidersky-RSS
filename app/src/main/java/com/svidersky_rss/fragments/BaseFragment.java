@@ -174,7 +174,7 @@ public class BaseFragment extends Fragment {
                         JSONObject thumbnail = items.getJSONObject("thumbnail");
                         JSONObject content = items.getJSONObject("player");//content
                         String video = content.getString("mobile");
-                        String picture = thumbnail.getString("sqDefault");
+                        String picture = thumbnail.getString("hqDefault");
                         Structure structure = new Structure(title, picture, video, uploaded, description);
                         listAll.add(structure);
                         count++;
