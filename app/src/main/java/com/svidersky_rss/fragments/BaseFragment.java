@@ -17,6 +17,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.svidersky_rss.Constants;
 import com.svidersky_rss.R;
+import com.svidersky_rss.utils.ConnChecker;
 import com.svidersky_rss.utils.DB;
 import com.svidersky_rss.utils.ServiceHandler;
 import com.svidersky_rss.utils.Structure;
@@ -59,7 +60,7 @@ public class BaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (activeSession != null &&
-                (activeSession.isOpened() || activeSession.isClosed()) ) {
+                (activeSession.isOpened() || activeSession.isClosed())) {
             onSessionStateChange(activeSession, activeSession.getState(), null);
         }
         uiHelper.onResume();
@@ -90,7 +91,7 @@ public class BaseFragment extends Fragment {
         uiHelper.onSaveInstanceState(outState);
     }
 
-    public boolean isTable(){
+    public boolean isTable() {
         return getResources().getBoolean(R.bool.isTable);
     }
 
@@ -105,7 +106,9 @@ public class BaseFragment extends Fragment {
     }
 
 
-    public String getTitle(int id) { return listAll.get(id).getTitle();}
+    public String getTitle(int id) {
+        return listAll.get(id).getTitle();
+    }
 
     public String getDescription(int id) {
         return listAll.get(id).getDescription();
@@ -123,7 +126,9 @@ public class BaseFragment extends Fragment {
         return listAll.get(id).getVideo();
     }
 
-    public String getTitleF(int id) { return listFavorite.get(id).getTitle();}
+    public String getTitleF(int id) {
+        return listFavorite.get(id).getTitle();
+    }
 
     public String getDescriptionF(int id) {
         return listFavorite.get(id).getDescription();
@@ -158,33 +163,35 @@ public class BaseFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... arg0) {
             ServiceHandler sh = new ServiceHandler();
-            String jsonStr = sh.makeServiceCall(Constants.url, ServiceHandler.GET);
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                    JSONObject data = jsonObj.getJSONObject("data");
-                    video = data.getJSONArray("items");
-                    listAll.clear();
-                    count = 0;
-                    for (int i = 0; i < video.length(); i++) {
-                        JSONObject items = video.getJSONObject(i);
-                        String title = items.getString("title");
-                        String uploaded = items.getString("uploaded");
-                        String description = items.getString("description");
-                        JSONObject thumbnail = items.getJSONObject("thumbnail");
-                        JSONObject content = items.getJSONObject("player");//content
-                        String video = content.getString("mobile");
-                        String picture = thumbnail.getString("hqDefault");
-                        Structure structure = new Structure(title, picture, video, uploaded, description);
-                        listAll.add(structure);
-                        count++;
+            if (ConnChecker.isOnline(context)) {
+                String jsonStr = sh.makeServiceCall(Constants.url, ServiceHandler.GET);
+                if (jsonStr != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonStr);
+                        JSONObject data = jsonObj.getJSONObject("data");
+                        video = data.getJSONArray("items");
+                        listAll.clear();
+                        count = 0;
+                        for (int i = 0; i < video.length(); i++) {
+                            JSONObject items = video.getJSONObject(i);
+                            String title = items.getString("title");
+                            String uploaded = items.getString("uploaded");
+                            String description = items.getString("description");
+                            JSONObject thumbnail = items.getJSONObject("thumbnail");
+                            JSONObject content = items.getJSONObject("player");//content
+                            String video = content.getString("mobile");
+                            String picture = thumbnail.getString("hqDefault");
+                            Structure structure = new Structure(title, picture, video, uploaded, description);
+                            listAll.add(structure);
+                            count++;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else {
+                    Log.e("ServiceHandler", "Couldn't get any data from the url");
+                    Toast.makeText(context, "Немає інету, братіш провірь підключення!", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
-                Toast.makeText(context, "Немає інету, братіш провірь підключення!", Toast.LENGTH_LONG);
             }
             return null;
         }
@@ -200,6 +207,9 @@ public class BaseFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(View.GONE);
+            if ((listAll.size()==0)){
+                Toast.makeText(context, "Please, check internet connection", Toast.LENGTH_LONG).show();
+            }
             MyAdapter adapter = new MyAdapter(context, listAll);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();

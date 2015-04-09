@@ -72,6 +72,7 @@ public class MyAdapter extends BaseAdapter {
         }
         Structure s = getStructure(position);
         holder.tvDescription.setText(s.getTitle());
+        String test = s.getUploaded();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = null;
         try {

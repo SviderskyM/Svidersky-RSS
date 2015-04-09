@@ -55,7 +55,6 @@ public class NotificationService extends Service {
         if (first) {
             showNotification();
             first = false;
-
         }
         ctx = this;
         timer = new Timer();
@@ -77,13 +76,13 @@ public class NotificationService extends Service {
                 }
             }
         };
-        timer.schedule(tTask, 500000, interval);
+        timer.schedule(tTask, 6000000, interval);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        notifyManager.cancel(99);
+        notifyManager.cancel(Constants.notification);
     }
 
 

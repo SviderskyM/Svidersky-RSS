@@ -27,6 +27,7 @@ import com.svidersky_rss.R;
 import com.svidersky_rss.utils.DB;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Eren on 17.12.2014.
@@ -35,6 +36,7 @@ public class ContentFragment extends BaseFragment {
 
     private DB db;
     private int id;
+    private ArrayList<String> parserList = new ArrayList();
 
     public static ContentFragment newInstance(int index) {
         ContentFragment f = new ContentFragment();
@@ -77,12 +79,25 @@ public class ContentFragment extends BaseFragment {
         if (Constants.flag) {
             titleTextView.setText(getTitleF(getIndex()));
             Picasso.with(getActivity()).load(getPictureF(getIndex()))
-                    .resize(700,600)
+                    .resize(700, 600)
                     .placeholder(R.drawable.ic_launcher)
                     .error(R.drawable.ic_launcher)
                     .into(imageView);
-            infoTextView.setText(Html.fromHtml(getDescriptionF(getIndex()) +
-                    "\nCсылка на видео: " + getVideoF(getIndex()) + "\n\n"));
+            parserList = parser(getDescriptionF(getIndex()));
+            if (parserList.size() != 0) {
+                infoTextView.setText(parserList.get(0) +"\n"
+                        + parserList.get(1) + "\n"
+                        + parserList.get(2) + "\n"
+                        + parserList.get(3) + "\n"
+                        + parserList.get(4) + "\n"
+                        + parserList.get(5) + "\n"
+                        + parserList.get(6) + "\n"
+                        + parserList.get(7)
+                        + "\nCсылка на видео: " + getVideoF(getIndex()) + "\n\n");
+            } else {
+                infoTextView.setText(Html.fromHtml(getDescriptionF(getIndex())) +
+                        "\nCсылка на видео: " + getVideoF(getIndex()) + "\n\n");
+            }
             button.setText("Delete with favorite");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,12 +110,25 @@ public class ContentFragment extends BaseFragment {
         } else {
             titleTextView.setText(getTitle(getIndex()));
             Picasso.with(getActivity()).load(getPicture(getIndex()))
-                    .resize(700,600)
+                    .resize(700, 600)
                     .placeholder(R.drawable.ic_launcher)
                     .error(R.drawable.ic_launcher)
                     .into(imageView);
-            infoTextView.setText(Html.fromHtml(getDescription(getIndex())) +
-                    "\nCсылка на видео: " + getVideo(getIndex()) + "\n\n");
+            parserList = parser(getDescription(getIndex()));
+            if (parserList.size() != 0) {
+                infoTextView.setText(parserList.get(0) +"\n"
+                        + parserList.get(1) + "\n"
+                        + parserList.get(2) + "\n"
+                        + parserList.get(3) + "\n"
+                        + parserList.get(4) + "\n"
+                        + parserList.get(5) + "\n"
+                        + parserList.get(6) + "\n"
+                        + parserList.get(7)
+                        + "\nCсылка на видео: " + getVideo(getIndex()) + "\n\n");
+            } else {
+                infoTextView.setText(Html.fromHtml(getDescription(getIndex())) +
+                        "\nCсылка на видео: " + getVideo(getIndex()) + "\n\n");
+            }
             if (db.check(getTitle(getIndex())) < 0) {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -144,8 +172,7 @@ public class ContentFragment extends BaseFragment {
                 default:
                     return super.onOptionsItemSelected(item);
             }
-        }
-        else return super.onOptionsItemSelected(item);
+        } else return super.onOptionsItemSelected(item);
     }
 
     private void shareFacebook() {
@@ -180,5 +207,36 @@ public class ContentFragment extends BaseFragment {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
             startActivity(intent);
         }
+    }
+
+    public ArrayList<String> parser(String description) {
+        //int start = description.indexOf("Канал");
+        int vk = description.indexOf("Группа");
+        int tw = description.indexOf("Твиттер");
+        int fb = description.indexOf("Фейсбук");
+        int in = description.indexOf("Инстаграм");
+        int subchannel = description.indexOf("Второй канал");
+        int rekl = description.indexOf("Заказ");
+        int end = description.indexOf("25144");
+        if (vk != -1 && tw != -1 && fb != -1 && in != -1 && subchannel != -1
+                && rekl != -1 && end != -1) {
+            String start = description.substring(0, vk - 2);
+            String vkontakte = description.substring(vk, tw - 1);
+            String twitter = description.substring(tw, fb - 1);
+            String facebok = description.substring(fb, in - 1);
+            String instagram = description.substring(in, subchannel - 1);
+            String subch = description.substring(subchannel, rekl - 1);
+            String reklama = description.substring(rekl, end + 5);
+            String ends = description.substring(end + 6);
+            parserList.add(start);
+            parserList.add(vkontakte);
+            parserList.add(twitter);
+            parserList.add(facebok);
+            parserList.add(instagram);
+            parserList.add(subch);
+            parserList.add(reklama);
+            parserList.add(ends);
+        }
+        return parserList;
     }
 }
