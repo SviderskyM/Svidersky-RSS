@@ -19,6 +19,7 @@ import com.svidersky_rss.Constants;
 import com.svidersky_rss.R;
 import com.svidersky_rss.utils.ConnChecker;
 import com.svidersky_rss.utils.DB;
+import com.svidersky_rss.utils.FirstIndexShow;
 import com.svidersky_rss.utils.ServiceHandler;
 import com.svidersky_rss.utils.Structure;
 import com.svidersky_rss.adapters.MyAdapter;
@@ -33,13 +34,13 @@ import java.util.ArrayList;
 /**
  * Created by Eren on 03.01.2015.
  */
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private static ArrayList<Structure> listAll = new ArrayList<>();
     public static ArrayList<Structure> listFavorite = new ArrayList<>();
     private static ListView listView;
-
     protected UiLifecycleHelper uiHelper;
+    private static FirstIndexShow please;
     private Session activeSession = Session.getActiveSession();
     private static final String TAG = "Facebook";
     private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -126,23 +127,23 @@ public class BaseFragment extends Fragment {
         return listAll.get(id).getVideo();
     }
 
-    public String getTitleF(int id) {
+    public String getTitleDB(int id) {
         return listFavorite.get(id).getTitle();
     }
 
-    public String getDescriptionF(int id) {
+    public String getDescriptionDB(int id) {
         return listFavorite.get(id).getDescription();
     }
 
-    public String getPictureF(int id) {
+    public String getPictureDB(int id) {
         return listFavorite.get(id).getPicture();
     }
 
-    public String getUploadedF(int id) {
+    public String getUploadedDB(int id) {
         return listFavorite.get(id).getUploaded();
     }
 
-    public String getVideoF(int id) {
+    public String getVideoDB(int id) {
         return listFavorite.get(id).getVideo();
     }
 
@@ -158,6 +159,12 @@ public class BaseFragment extends Fragment {
             this.context = context;
             listView = lw;
             this.progressBar = progressBar;
+        }
+        public GetData(Context context, ListView lw, ProgressBar progressBar, FirstIndexShow pleas) {
+            this.context = context;
+            listView = lw;
+            this.progressBar = progressBar;
+            please = pleas;
         }
 
         @Override
@@ -213,6 +220,9 @@ public class BaseFragment extends Fragment {
             MyAdapter adapter = new MyAdapter(context, listAll);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+            if(context.getResources().getBoolean(R.bool.isTable)){
+                please.showIndex();
+            }
         }
 
         public int getCount() {
@@ -234,6 +244,13 @@ public class BaseFragment extends Fragment {
             this.context = context;
             listView = lw;
             this.progressBar = progressBar;
+        }
+
+        public GetData2(Context context, ListView lw, ProgressBar progressBar, FirstIndexShow ples) {
+            this.context = context;
+            listView = lw;
+            this.progressBar = progressBar;
+            please = ples;
         }
 
         @Override

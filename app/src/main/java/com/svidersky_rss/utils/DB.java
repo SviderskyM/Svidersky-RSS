@@ -26,7 +26,8 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
-    private static final String CREATE_TABLE = "create table " + TABLE_NAME + " ( "
+    private static final String CREATE_TABLE = "create table "
+            + TABLE_NAME + " ( "
             + COLUMNS.ID + " integer primary key autoincrement, "
             + COLUMNS.TITLE + " TEXT, "
             + COLUMNS.PICTURE+ " TEXT, "

@@ -56,6 +56,8 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.Con
         menu.findItem(R.id.favourite).setVisible(false);
         menu.findItem(R.id.profile).setVisible(false);
         menu.findItem(R.id.share).setVisible(false);
+        menu.findItem(R.id.liked).setVisible(false);
+        menu.findItem(R.id.not_liked).setVisible(false);
         return true;
     }
 

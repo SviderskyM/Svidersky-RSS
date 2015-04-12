@@ -15,7 +15,7 @@ import com.svidersky_rss.utils.DB;
 /**
  * Created by Eren on 10.02.2015.
  */
-public class Favorite extends BaseActivity {
+public class FavoriteActivity extends BaseActivity {
 
 
     @Override
@@ -24,6 +24,7 @@ public class Favorite extends BaseActivity {
         Constants.flag = true;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.multi_activity);
+        setTitle(R.string.favourites);
     }
     @Override
     protected void onStop() {
@@ -50,7 +51,9 @@ public class Favorite extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.favourite).setVisible(false);
+        menu.findItem(R.id.liked).setVisible(false);
         menu.findItem(R.id.share).setVisible(false);
+        menu.findItem(R.id.not_liked).setVisible(false);
         return true;
     }
 
