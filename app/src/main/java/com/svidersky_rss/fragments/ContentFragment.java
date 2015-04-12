@@ -132,7 +132,6 @@ public class ContentFragment extends BaseFragment {
     public void shareFacebook() {
         if (FacebookDialog.canPresentShareDialog(getActivity().getApplicationContext(),
                 FacebookDialog.ShareDialogFeature.SHARE_DIALOG)) {
-            // Publish the post using the Share Dialog
             FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
                     .setPicture(getPicture(getIndex()))
                     .setLink(getVideo(getIndex()))
@@ -140,7 +139,6 @@ public class ContentFragment extends BaseFragment {
 
             uiHelper.trackPendingDialogCall(shareDialog.present());
         } else {
-            // Fallback. For example, publish the post using the Feed Dialog
             String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + getVideo(getIndex());
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
             startActivity(intent);

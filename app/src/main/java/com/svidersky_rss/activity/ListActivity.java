@@ -1,23 +1,14 @@
 package com.svidersky_rss.activity;
 
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.facebook.widget.FacebookDialog;
-
-import com.google.android.gms.plus.PlusShare;
-import com.svidersky_rss.Constants;
 import com.svidersky_rss.R;
-import com.svidersky_rss.fragments.ListFragment;
+
 import com.svidersky_rss.service.NotificationService;
 import com.svidersky_rss.utils.DB;
 
@@ -31,8 +22,6 @@ public class ListActivity extends BaseActivity {
         setContentView(R.layout.multi_activity);
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
-        mSettings = getSharedPreferences(Constants.APP_PREFERENCES,
-                Context.MODE_PRIVATE);
         db = new DB(this);
 
     }

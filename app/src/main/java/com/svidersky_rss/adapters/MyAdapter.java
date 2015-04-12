@@ -72,7 +72,6 @@ public class MyAdapter extends BaseAdapter {
         }
         Structure s = getStructure(position);
         holder.tvDescription.setText(s.getTitle());
-        String test = s.getUploaded();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = null;
         try {
@@ -81,11 +80,6 @@ public class MyAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         holder.date.setText(date.toString());
-        /*Picasso.with(ctx).load(s.getPicture())
-                .placeholder(R.drawable.ic_launcher)
-                .error(R.drawable.ic_launcher)
-                .into(holder.ivImage);*/
-
         return convertView;
     }
     static class ViewHolder {

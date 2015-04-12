@@ -46,7 +46,6 @@ public class LoginFragment extends BaseFragment {
         Request request = Request.newMeRequest(activeSession, new Request.GraphUserCallback() {
             @Override
             public void onCompleted(final GraphUser user, Response response) {
-                // If the response is successful
                 if (user != null) {
                     profilepic.setProfileId(user.getId());
                     userNameView.setText(user.getName());

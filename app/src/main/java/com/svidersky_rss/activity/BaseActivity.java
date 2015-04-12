@@ -1,25 +1,21 @@
 package com.svidersky_rss.activity;
 
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.svidersky_rss.Constants;
+
 import com.svidersky_rss.R;
 
 /**
  * Created by Eren on 10.02.2015.
  */
 public class BaseActivity extends ActionBarActivity {
-    SharedPreferences mSettings;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,8 +28,6 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
-        SharedPreferences mySharedPreferences = getSharedPreferences
-                (Constants.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
 
